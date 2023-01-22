@@ -18,7 +18,9 @@ class server{
         this.app.use(express.json())
     }
     
-    async dbConnect(){await dbConnection();}
+    async dbConnect(){
+        //await dbConnection();
+    }
 
     routes(){
         this.app.use(express.static('public'));
