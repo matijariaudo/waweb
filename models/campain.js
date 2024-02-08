@@ -9,6 +9,7 @@ const campainSchema=Schema({
         sendDate:{type:Date,default:0}
     }],
     date:{type:Date},
+    date_start:{type:Date},
     user:{type:Schema.Types.ObjectId,ref:'User'},
     status:{type:String,default:"pendiente"}
 });

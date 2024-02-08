@@ -6,18 +6,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script type="text/javascript" src="jquery.qrcode.min.js"></script>
+    <script src="./socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="style.css?id=1">
   </head>
   <body>
-    <nav class="navbar fixed-top p-0">
+    <nav class="navbar fixed-top p-0 capa capa_2">
         <div class="container-fluid p-0">
-          <div class="col-12 p-2" style="background-color:none">ittt</div>
+            <div class="col-12 p-2s sombra" style="background-color:rgba(155,255,229);padding:5px 10px">
+                <a style="font-size:1.4em;"><b style="color:#000">WSP</b><b style="color:#000;font-weight: 100;">PLUS</b></a>
+            </div>
         </div>
     </nav>
     <div class="container-fluid p-0 m-0 containerPrincipal">
         <div class="col row p-0 m-0">
-            <div class="col-12 p-0" style="padding-top:50px;background-color:rgba(155,255,229) ;height: 40px;"></div>
-            <div class="col-12 p-0" style="margin-top:0px; transform: rotate(180deg);">
+            <div class="col-12 p-0" style="margin-top:0px; transform: rotate(180deg);display:none;">
                 <div class="col-12 p-0">
                 <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                 viewBox="0 12 150 38" preserveAspectRatio="none" shape-rendering="auto">
@@ -35,22 +38,21 @@
             </div>
             <div class="col-12 row capaBase capa capa_2">
                 <div class="col-12 col-sm-4 p-3">
-                    <button class="btn sombra" style="float:right;background-color:rgba(155,255,229);padding:1px 7px;margin-top:3px">+</button>
-                    <h3>Sender phones</h3>
-                    <input type="text" placeholder="Search by number">
-                    <div class="col-12 p-0" id="div_campains">
+                    <button class="btn sombra" onclick="$('#phoneModal').modal('show')" style="border:0px;cursor:float;float:right;background-color:rgba(155,255,229);padding:1px 7px;margin-top:3px">+</button>
+                    <h3>Números conectados</h3>
+                    <div class="col-12 p-0" id="div_phones">
                     </div>
                 </div>
                 <div class="col-12 col-sm-4 p-3">
-                    <button class="btn sombra" onclick="$('#exampleModal').modal('show')" style="cursor:float;float:right;background-color:rgba(155,255,229);padding:1px 7px;margin-top:3px">+</button>
-                    <h3>Mensajes</h3>
+                    <button class="btn sombra" onclick="$('#exampleModal').modal('show')" style="border:0px;cursor:float;float:right;background-color:rgba(155,255,229);padding:1px 7px;margin-top:3px">+</button>
+                    <h3>Campañas</h3>
                     <input type="text" placeholder="Search by number, name">
                     <div class="col-12 p-0" id="div_campain">
                     </div>
                 </div>
             </div>
             <div class="col-12 p-2 m-0 row capaBase capa capa_1">
-                <div class="col-12 col-sm-4 offset-sm-4 p-4 sombra" style="background:#FFF;border-radius:10px">
+                <div class="col-12 col-sm-4 offset-sm-4 p-4 sombra" style="background:#FFF;border-radius:10px;margin-top:10%">
                 <h3>Iniciar Sesión</h3>
                 <input type="text" placeholder="Correo" id="login_correo">
                 <input type="text" placeholder="Clave" id="login_clave">
@@ -70,17 +72,86 @@
               <p>Crear nueva campaña:</p>
               <textarea rows="3" id="msgForm"></textarea>
               <input type="text" placeholder="Numero" id="nro" style="width:80%">
-              <button onclick="add_nro()" class="btn" style="margin-top:-5px;margin-left:5px">Add</button>
-              <div class="col-12" id="div_nro">
+              <button onclick="add_nro()" class="btn btn2" style="margin-top:-5px;margin-left:5px;font-size:.8em">+</button>
+              <div class="col-12" id="div_nro" style="max-height:100px;overflow-y:auto;">
 
               </div>  
             </div>
             <div class="modal-footer" style="border:0px">
-              <button type="button" class="btn btn-primary" onclick="nuevo_mensaje()">Save changes</button>
+              <button type="button" class="btn btn-primary" onclick="nuevo_mensaje()">Agregar</button>
             </div>
           </div>
         </div>
     </div>
+    <div class="modal" id="phoneModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header" style="border:0px">
+              <h5 class="modal-title">Añadir número</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Numero:</p>
+              <input type="text" placeholder="Numero" id="nuevo_nro_wsp"> 
+            </div>
+            <div class="modal-footer" style="border:0px">
+              <button type="button" class="btn btn-primary" onclick="agregar_numero_tel()">Agregar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal" id="vincularModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header" style="border:0px">
+              <h5 class="modal-title">Vincular dispositivo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body vincular vincular_1" style="font-weight:100;font-size:0.8em;">
+              <p>1- Abre tu Whatsapp, y prepara tu app para vincular un nuevo dispositivo.</p>
+              <img src="img/vincularWA.jpg" alt="" style="width: 100% ;">  
+            </div>
+            <div class="modal-body vincular vincular_2" style="height:240px;font-weight:100;font-size:0.8em;">
+                <input type="hidden" id="qr_nro">
+                <div id="qr_wsp" style="width:100%;height:100px;text-align:center;"></div>  
+            </div>
+            <div class="modal-footer" style="border:0px">
+              <button type="button" class="btn btn-primary  vincular vincular_1" onclick="mostrar('vincular',2);solicitar_qr($('#qr_nro').val())">Solicitar QR <i class="zmdi zmdi-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal" id="campainModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header" style="border:0px">
+              <h5 class="modal-title">Datos de envios</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="font-weight:100;font-size:0.8em">
+                <input type="hidden" id="campain_buscar_id" value="">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:30px"></th>
+                            <th>Destinatario</th>
+                            <th>Estado</th>
+                            <th>Enviado desde</th>
+                            <th>Fecha Envio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="campainMensaje_tabla">
+                        
+                    </tbody>
+                </table>   
+            </div>
+            <div class="modal-footer" style="border:0px">
+              <button type="button" class="btn btn-primary" style="display:none">Solicitar QR <i class="zmdi zmdi-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script>
         function capa(i){
@@ -92,8 +163,9 @@
         iniciar_sesion();
         })
 
+        
         const buscar_campains=()=>{
-            $("#div_campain").html("<center style='margin-top:40px;font-size:2em'><i class='zmdi zmdi-spinner'></i></center>")
+            //$("#div_campain").html("<center style='margin-top:40px;font-size:2em'><i class='zmdi zmdi-spinner'></i></center>")
             env={};
             env["token"]=user.token;
             ajax("http://localhost:8080/api/getcampain",env,(e)=>{
@@ -103,28 +175,171 @@
                 e.forEach(b => {
                     $nros="";
                     console.log(b)
-                    envi=b.to.filter(a=>{if(a.sendStatus=="enviado"){return true;}})
                     $("#div_campain").append(`<div class="col-12">
                         <div class="col-12 placa" style="cursor:default;color:${b.status=='pausado'?'#8c8c8c':'#000'}">
-                            <button class="btn sombra" data="${b.uid}" onclick="cambio_estado($(this).attr('data'),'eliminado')" style="padding:2px 7px;float:right;background:white;"><i class="zmdi zmdi-delete"></i></button>
-                            <button class="btn sombra" data="${b.uid}" onclick="cambio_estado($(this).attr('data'),'${b.status=='pausado'?'pendiente':'pausado'}')" style="padding:2px 7px;margin-right:3px;float:right;background:white"><i class="zmdi zmdi-${b.status=='pausado'?'play':'pause'}"></i></button>
+                            <button class="btn btn3 sombra" data="${b._id}" onclick="cambio_estado($(this).attr('data'),'eliminado')" style="padding:2px 7px;float:right;background:white;"><i class="zmdi zmdi-delete"></i></button>
+                            <button class="btn btn3 sombra" data="${b._id}" onclick="cambio_estado($(this).attr('data'),'${b.status=='pausado'?'pendiente':'pausado'}')" style="padding:2px 7px;margin-right:3px;float:right;background:white"><i class="zmdi zmdi-${b.status=='pausado'?'play':'pause'}"></i></button>
+                            <button class="btn sombra" data="${b._id}" onclick="$('#campain_buscar_id').val('${b._id}');$('#campainModal').modal('show');buscar_campains_id();" style="padding:2px 4px;margin-right:3px;float:right;color:white;"><i class="zmdi zmdi-eye"></i></button>
                             ${b.msg}
-                            <p style="font-size:.7em;margin:0px;">Date: ${fecha(b.date)}</p>
-                            <p style="font-size:.7em;margin:0px;">Send: ${envi.length} de ${b.to.length}</p>
-                            <p style="font-size:.7em;margin:0px;">Created by: ${b.user.nombre}</p>
+                            <p style="display:${b.status=='pausado'?'block':'none'};font-size:.5em;margin:0px;font-weight:300;margin-top:-4px">PAUSADO</p>
+                            <p style="font-size:.7em;margin:0px;">
+                                <i class="zmdi zmdi-calendar"></i> ${fecha(b.date_start)}
+                                <i class="zmdi zmdi-mail-send"></i> ${b.Enviados} de ${(b.Enviados+b.Cola)}
+                                <i class="zmdi zmdi-edit"></i> ${b.user[0].nombre}</p>
                         </div>
                     </div>`);  
                 });
             })
+        }
+
+        const buscar_campains_id=(id)=>{
+            //$("#div_campain").html("<center style='margin-top:40px;font-size:2em'><i class='zmdi zmdi-spinner'></i></center>")
+            env={};
+            env["token"]=user.token;
+            env["id"]=$("#campain_buscar_id").val();
+            ajax("http://localhost:8080/api/getcampain/mensajes",env,(e)=>{
+                $("#campainMensaje_tabla").html("")
+                console.log("e[0].cola")
+                console.log(e)
+                e.enviados.forEach(a => {
+                    $("#campainMensaje_tabla").append(`
+                        <tr style="font-size:.8em">
+                            <td></td>
+                            <td>+${a.nro}</td>
+                            <td>+${a.phone[0].phone}</td>
+                            <td style="text-align:center">
+                                <img src="img/${a.sendStatus=="enviado"?"active.png":"init.gif"}" style="width:15px">
+                                ${a.sendStatus=="enviado"?"Enviado":"En cola.."}
+                            </td>
+                            <td>${fecha(a.sendDate,true)}</td>
+                        </tr>
+                    `)       
+                });
+                e.cola.forEach(a => {
+                    $("#campainMensaje_tabla").append(`
+                        <tr style="font-size:.8em">
+                            <td><input type="checkbox" class="campainMensaje_checkbox" data="${a.nro}" style="margin-top:5px;margin-bottom:5px"></td>
+                            <td>+${a.nro}</td>
+                            <td>+${a.phone[0].phone}</td>
+                            <td style="text-align:center">
+                                <img src="img/${a.sendStatus=="enviado"?"active.png":"init.gif"}" style="width:15px">
+                                ${a.sendStatus=="enviado"?"Enviado":"En cola.."}
+                            </td>
+                            <td>-</td>
+                          </tr>
+                    `)       
+                });
+                $(".campainMensaje_checkbox").on("click",()=>{
+                    selec=[];$(".campainMensaje_checkbox").each(function(e){if($(this).prop("checked")){selec.push($(this).attr("data"));}});
+                    //console.log(selec)    
+                })
+            })
+        }
+
+        const buscar_phones=()=>{
+            $("#div_phones").html("<center style='margin-top:40px;font-size:2em'><i class='zmdi zmdi-spinner'></i></center>")
+            env={};
+            env["token"]=user.token;
+            ajax("http://localhost:8080/api/phone",env,(e)=>{
+                $("#div_phones").html("")
+                if(e.errors){capa(1);return false;}
+                if(e.length==0){$("#div_phones").html("<p style='font-size:.7em;text-align:center'>You don't have phones</p>");return true}
+                e.forEach(b => {
+                    $nros="";
+                    console.log(b)
+                    $("#div_phones").append(`<div class="col-12">
+                        <div class="col-12 placa" style="cursor:default;color:${b.status=='stop'?'#8c8c8c':'#000'}">
+                            <button class="btn btn3 sombra" data="${b.nro}" onclick="eliminar_numero($(this).attr('data'),'eliminado')" style="padding:2px 7px;float:right;background:white;"><i class="zmdi zmdi-delete"></i></button>
+                            <h5 style='margin:0px 0px 10px 0px;font-weight:100'><i class="zmdi zmdi-smartphone-android"></i>  +${b.nro}</h5>
+                            <div style="font-size:.8em;display:${b.status=='activo'?'none':'block'}"">
+                            Te hemos enviado un código<br>
+                            <input type="text" style="width:100px" placeholder="Code" id="codigo_phone">
+                            <button class="btn" onclick="verificar_codigo(${b.nro})" style="margin-top:-3px;font-size:.8em">VALIDAR</button>
+                            <button class="btn btn2" onclick="solicitar_codigo(${b.nro})"  style="margin-top:-3px;font-size:.8em;">REENVIAR</button>
+                            </div>
+                            <div id="connection_${b.nro}"></div>
+                        </div>
+                    </div>`);
+                    actualizar_connection(b.nro,b.connection)  
+                });
+            })
+        }
+
+        function actualizar_connection(nro,connection){
+            $("#connection_"+nro).html(`
+            
+            <p style="font-size:.7em;margin:0px;display:${connection=='online'?'block':'none'}"><img src="img/active.png" width="20">CONECTADO</p>
+            <p style="font-size:.7em;margin:0px;display:${connection=='inicializando'?'block':'none'}"><img src="img/init.gif" style="width:15;margin:0px 4px">CONECTANDO..</p>
+            <p style="font-size:.7em;margin:0px;display:${connection=='stop'?'block':'none'}"><img src="img/desactive.png" style="width:15px;margin:0px 4px">DESCONECTADO</p>
+            <p style="font-size:.7em;margin:0px;display:${connection=='qr'?'block':'none'}"><img src="img/qr.png" style="width:15px;margin:0px 4px">DESVINCULADO <button class="btn sombra"  onclick="$('#qr_nro').val('${nro}');mostrar('vincular',1);$('#vincularModal').modal('show')" style="background:#FFF;padding:3px 5px;font-size:.8em;margin:0px;margin-top:0px"> Vincular</button></p>
+            `)
+        }
+
+        function mostrar(capa,i){
+            $("."+capa).hide();
+            $("."+capa+"_"+i).show();
         }
         
         function cambio_estado(uid,newEstado){
             env={}
             env.status=newEstado;env.token=user.token;
             ajax("http://localhost:8080/api/campain/"+uid,env,(e)=>{
-                if(e.errors){alert("No se pudo modificar");return false;}
                 console.log(e);
+                if(e.errors){alert("No se pudo modificar");return false;}
                 buscar_campains()
+            })
+        }
+
+        function solicitar_codigo(nro){
+            env={}
+            env.nro=nro;env.token=user.token;
+            ajax("http://localhost:8080/api/phone/codigo",env,(e)=>{
+                if(e.error){alert("No se pudo modificar");return false;}
+                console.log(e);
+                alert("código enviado")
+            })
+        }
+
+        function verificar_codigo(nro){
+            env={}
+            env.nro=nro;env.token=user.token;env.cod=$("#codigo_phone").val()
+            ajax("http://localhost:8080/api/phone/validar",env,(e)=>{
+                console.log(e);
+                if(e.error){alert(e.error);return false;}
+                buscar_phones();
+            })
+        }
+
+        function agregar_numero_tel(){
+            nro=$("#nuevo_nro_wsp").val()
+            env={}
+            env.nro=nro;env.token=user.token;
+            ajax("http://localhost:8080/api/phone/creacion",env,(e)=>{
+                console.log(e);
+                if(e.error){alert(e.error);return false;}
+                buscar_phones();
+            })
+        }
+
+        function solicitar_qr(nro){
+            env={}
+            env.nro=nro;env.token=user.token;
+            ajax("http://localhost:8080/api/phone/qr",env,(e)=>{
+                console.log(e);
+                if(e.error){alert(e.error);return false;}
+                $('#qr_wsp').html("")
+                $('#qr_wsp').qrcode({width: 164,height: 164,text: e.qr});
+            })
+        }
+
+        function eliminar_numero(nro){
+            env={}
+            env.nro=nro;env.token=user.token;
+            alert(JSON.stringify(env))
+            ajax("http://localhost:8080/api/phone/eliminar",env,(e)=>{
+                if(e.error){alert("No se pudo modificar");return false;}
+                console.log(e);
+                buscar_phones()            
             })
         }
 
@@ -147,10 +362,13 @@
         })
 
         function add_nro(){
-            nro=$("#nro").val();
-            $("#div_nro").append(`
-            <b class="btn nroSaved" data="${nro}" style="margin-top:4px;border:1px solid grey">${nro} <a onclick="$(this).parent().remove()">x</b></b>
-            `)
+            nros=$("#nro").val().split(";");
+            nros.forEach(nro => {
+                if(nro==""){return}
+                $("#div_nro").append(`
+                <b class="btn nroSaved" data="${nro}" style="margin-top:4px;border:1px solid grey;padding:1px 5px">${nro} <a onclick="$(this).parent().remove()" style="font-weight:100;font-size:1.2em"><i class="zmdi zmdi-close-circle-o"></i></a></b>
+                `);
+            });
             $("#nro").val("")
         }
 
@@ -165,26 +383,48 @@
             env.msg=$("#msgForm").val();
             ajax("http://localhost:8080/api/campain",env,(e)=>{
                 if(e.errors){alert("Error, debe haber mensaje y destinatarios válidos.");$('#exampleModal').modal('show');return false;}
+                buscar_phones()
                 buscar_campains();
                 $('#exampleModal').modal('hide')
             })
         }
 
-        function fecha(fc){
+        $(window).on('load',()=>{
+        })
+        
+
+        function fecha(fc,seg){
             fc=new Date(fc);
             ms=fc.getMonth()+1;ms<10?ms="0"+ms:true;
             d=fc.getDate();d<10?d="0"+d:true;
             h=fc.getHours();h<10?h="0"+h:true;
             m=fc.getMinutes();m<10?m="0"+m:true;
-            return h+":"+m+" "+d+"/"+ms+"/"+fc.getFullYear();
+            s="";if(seg){s=fc.getSeconds();s<10?s="0"+s:true;s=":"+s;}
+            return h+":"+m+s+" "+d+"/"+ms+"/"+fc.getFullYear();
         }
 
         capa(1)
         control_sesion();
         function control_sesion(){
             user=JSON.parse(localStorage.getItem("user"))
-            if(user){capa(2);buscar_campains();}
+            if(user){capa(2);buscar_phones();buscar_campains();}
         }
+
+        const socket=io({
+            'extraHeaders':{
+            'token':localStorage.getItem("token")
+        }
+        });
+        socket.on('connect',()=>console.log("Conectado"))
+        socket.on('recibir',(payload)=>{
+            $("#vincularModal").modal('hide');
+            actualizar_connection(payload.nro,payload.connection)
+        })
+        socket.on('msg_enviado',(payload)=>{
+            buscar_campains()
+            buscar_campains_id();
+        })
+
     </script>
   </body>
 </html>

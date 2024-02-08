@@ -1,15 +1,17 @@
-const {server}=require('./server')
 const {Wsp}=require('./waSesion')
 const Campain=require('./campain')
 const User=require('./user')
 const Phone=require('./phone')
+const Mensage=require('./mensage')
+const Contacto=require('./contacto')
 
 const index={
-    server,
     Wsp,
     Campain,
+    Mensage,
     User,
-    Phone
+    Phone,
+    Contacto
 } 
 
 module.exports=index

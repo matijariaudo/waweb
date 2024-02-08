@@ -1,28 +1,34 @@
-const { Wsp } = require("../models");
+const { Wsp, Phone } = require(".././models");
 
 const wsp=[];
-telefonos=["50765344614","5493406460886"]
 
 const initWA=async()=>{
-    await Promise.all(telefonos.map(async(nro)=>{
-        wsp[nro]=new Wsp(nro);
-        await wsp[nro].init()
+    const telefonos=(await Phone.find()).map(e=>e.id);
+    console.log(telefonos)
+    const wsp=new Wsp();
+    await Promise.all(telefonos.filter(a=>a=='65c0ca508d18bcd5962fa3bb').map(async(id)=>{
+        const inst=await wsp.Instance(id)
     }));
 }    
 
 
 
-
 const obtener_estado=async(nro)=>{
-    if(!wsp[nro]){return {error:"No existe el nro indicado."}}
-    if(wsp[nro].sesion=="iniciando"){return {error:"Aún no ha iniciado."}}
+    if(!wsp[nro]){return {status:false,error:"No Registrado."}}
+    if(wsp[nro].sesion=="iniciando"){return {status:false,error:"Iniciando"}}
     const e=await wsp[nro].status();
     if(!e){
-        return {status:"desconectado",qr: wsp[nro].qr};
+        return {status:false,error:"Desconectado",qr: wsp[nro].qr};
     }else{
-        return {status:e}
+        return {status:true}
     }
-    
+}
+
+const cerrar_sesion=async(nro)=>{
+    return new Promise(async(resolve, reject) => {
+        delete(wsp[nro])
+        resolve(true);
+    })
 }
 
 const enviar_mensaje=async({nro,to,msg,url})=>{
@@ -50,4 +56,4 @@ function fecha(fc){
     return h+":"+m+":"+s+" "+d+"-"+ms+"-"+fc.getFullYear();
 }
 
-module.exports={initWA,obtener_estado,enviar_mensaje,obtener_qr}
+module.exports={initWA,obtener_estado,enviar_mensaje,obtener_qr,cerrar_sesion}

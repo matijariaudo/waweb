@@ -1,10 +1,10 @@
-const { server } = require("./models")
 const cron = require("node-cron");
+const {server}=require('./models/server')
 const { initWA } = require("./controllers/wa");
 
 const init=async()=>{
     console.clear();
-    const Server=new server();
+    Server=new server();
     Server.listen();
     await initWA();
 }
@@ -22,5 +22,4 @@ cron.schedule("*/3 * * * * * *", function () {
 });
   
   
-
-init()
+init();

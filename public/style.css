@@ -11,8 +11,8 @@ input,textarea{
   margin:0px 0px 10px 0px;
   width: 100%;
   padding:5px 20px;
-  border:1px solid rgba(155,255,229);
-  background-color: rgba(155,255,229,0.15);
+  border:1px solid rgb(248, 248, 248);
+  background-color: rgba(0,0,0, 0.015);
   border-radius:5px
 }
 input::placeholder{
@@ -20,9 +20,9 @@ input::placeholder{
 }
 
 .sombra{
-    box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.25);
--webkit-box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.25);
--moz-box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.25);
+    box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.05);
+-webkit-box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.05);
+-moz-box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.05);
 }
 
 .placa{
@@ -41,18 +41,30 @@ input::placeholder{
     overflow-y: auto;
     padding: 0px;
     padding-top: 0px;
+    background-color:#FFF;
 }
 
 .capaBase{
     margin:0px;
     padding:0px;
-    padding-top:0px;
-    margin-top: -40px;
+    padding-top:70px;
+    margin-top: 0px;
 }
 .btn{
   background:rgba(155,255,229);
-    color:#000;
-    border:0px
+  color:#000;
+  border:1px solid rgb(84, 194, 164);
+}
+.btn2{
+  color:#FFF;background:rgb(191, 219, 243)
+}
+.btn3{
+  color:rgba(155,255,229);
+}
+.btn:hover{
+  background: rgb(84, 194, 164);
+  border:1px solid rgb(84, 194, 164);
+  color:rgb(84, 194, 164);
 }
 
 table{
@@ -61,6 +73,9 @@ table{
 thead{
     background:rgba(155,255,229);
     color:#000
+}
+td,th{
+  font-weight: 100;
 }
 
 tbody tr:nth-child(even){
