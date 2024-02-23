@@ -11,16 +11,16 @@ const phoneShow=async(req,res)=>{
 const fs = require('fs').promises;
 
 const removePhone=async(req,res)=>{
-    const {nro}=req.body;
-    const phone_bus=await Phone.findOne({nro});
+    const {instanceId}=req.body;
+    const phone_bus=await Phone.findById(instanceId);
     if(!phone_bus){
-        return res.status(200).json({error:"El telefono ya se encuentra registrado."})
+        return res.status(200).json({error:"El no se encuentra registrado."})
     }    
-    cerrar_sesion(nro);
-    //fsExtra.remove('./.wwebjs_auth/session-'+nro);
-    //phone_bus.status='delete';
+    fsExtra.remove('./.wwebjs_auth/session-'+phone_bus.id);
+    phone_bus.status='delete';
     phone_bus.save()
-    return res.status(200).json({status:"Se ha borrado correctamente"})
+    console.log("ELIMINAR",'./.wwebjs_auth/session-'+phone_bus.id)
+    return res.status(200).json({status:"Se ha borrado correctamente",phone_bus})
 }
 
 const phoneCreacion=async(req,res)=>{

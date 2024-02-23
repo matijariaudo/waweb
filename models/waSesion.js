@@ -9,40 +9,46 @@ class Instances{
     constructor(id){
         this.id=id;
         this.qr="";
+        this.phone={}
         this.session="initializing";
     }
-    
     async init(){
         let primera=true;
         let phone;
         phone=await Phone.findById(this.id)
-        console.log("inicializando -> "+this.id,phone)
+        console.log("Starting: "+this.id)
         return new Promise((resolve, reject) => {
             this.client = new Client({authStrategy: new LocalAuth({ clientId: this.id }), puppeteer: {headless: true,args: ['--no-sandbox', '--disable-setuid-sandbox']}});
             this.client.on('qr', async(qr) => {
                 this.qr=qr;
                 this.session="pending";
+                phone.session="pending";phone.save();
                 if(primera){
                     primera=false;
                     resolve(true);
                 }
             });
-            this.client.on('ready', async()=>{
-                obtenerSocket.getInstance().io.emit('recibir',{nro:this.nro,connection:"online"})
-                this.session="connect";this.qr="";primera=false;console.log("ready "+this.id);
+            this.client.on('ready', async(aaa)=>{
+                //obtenerSocket.getInstance().io.emit('recibir',{nro:this.nro,connection:"online"})
+                this.session="connect";this.qr="";primera=false;console.log("Ready to use: "+this.id);
+                phone.session="connect";phone.save();
+                this.phone=await this.client.info.wid;
                 resolve(true);
             });
             this.client.on('disconnected', async(r) => {
                 this.session="disconnect";this.qr="";primera=false;console.log("Issue: "+this.nro);
+                phone.session="disconnect";phone.save();
                 this.init();
             });
-            this.client.on('message', message => {console.log("+"+message.from.split("@")[0],message.body);});
+            this.client.on('message', message => {
+                //console.log("+"+message.from.split("@")[0],message.body);
+            });
             this.client.initialize()
         });
     }
 
     async getProp(){
-        return {qr:this.qr,id:this.id,session:this.session};
+        return {qr:this.qr,id:this.id,session:this.session,phone:this.phone};
     }
 
     async status(){
@@ -88,6 +94,12 @@ class Instances{
         return messages
     }
 
+    async getConctacts(){
+        console.log(this.client.info.wid)
+        const contacts=await this.client.info.wid;
+        return contacts;
+    }
+    
 
 }
 
@@ -110,7 +122,6 @@ class Wsp {
       return this.instancias[id];
     }
     async getInstance(id) {
-        console.log("No hay instancia=?",!this.instancias[id])
         if (!this.instancias[id]) {
             console.log("NO hay")
             return false;

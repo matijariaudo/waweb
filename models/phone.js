@@ -4,7 +4,7 @@ const phoneSchema=Schema({
     name:{type:String,default:"-",require:[true,"Name is required."]},
     user:{type:Schema.Types.ObjectId,ref:'usuario'},
     status:{type:String,default:"active"},
-    connection:{type:String,default:"stop"},
+    session:{type:String,default:"pending"},
     type:{type:String,default:"cliente"}
 });
 phoneSchema.methods.toJSON= function(){
