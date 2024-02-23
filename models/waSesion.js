@@ -95,7 +95,6 @@ class Instances{
     }
 
     async getConctacts(){
-        console.log(this.client.info.wid)
         const contacts=await this.client.info.wid;
         return contacts;
     }
@@ -123,10 +122,8 @@ class Wsp {
     }
     async getInstance(id) {
         if (!this.instancias[id]) {
-            console.log("NO hay")
             return false;
         }
-        console.log("hay")
         return this.instancias[id];
     }
 }

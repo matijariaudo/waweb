@@ -19,7 +19,7 @@ const removePhone=async(req,res)=>{
     fsExtra.remove('./.wwebjs_auth/session-'+phone_bus.id);
     phone_bus.status='delete';
     phone_bus.save()
-    console.log("ELIMINAR",'./.wwebjs_auth/session-'+phone_bus.id)
+    //console.log("ELIMINAR",'./.wwebjs_auth/session-'+phone_bus.id)
     return res.status(200).json({status:"Se ha borrado correctamente",phone_bus})
 }
 
@@ -34,7 +34,6 @@ const AveriguarQr=async(req,res)=>{
     const {instanceId}=req.body;
     const wsp=new Wsp();
     const instance=await wsp.getInstance(instanceId)
-    console.log("ins",instance)
     if(!instance){return res.status(200).json({status:"error",error:"Incorrect instanceID value."})}
     const data=await instance.getProp()
     return res.status(200).json({data})
