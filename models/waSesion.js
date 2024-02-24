@@ -17,12 +17,13 @@ class Instances{
         let phone;
         phone=await Phone.findById(this.id)
         console.log("Starting: "+this.id)
-        return new Promise((resolve, reject) => {
+        return new Promise(async(resolve, reject) => {
             this.client = new Client({authStrategy: new LocalAuth({ clientId: this.id }), puppeteer: {headless: true,args: ['--no-sandbox', '--disable-setuid-sandbox']}});
             this.client.on('qr', async(qr) => {
                 this.qr=qr;
                 this.session="pending";
                 phone.session="pending";phone.save();
+                console.log("Needing QR: ",this.id,"QR : ",this.qr)
                 if(primera){
                     primera=false;
                     resolve(true);
@@ -43,7 +44,7 @@ class Instances{
             this.client.on('message', message => {
                 //console.log("+"+message.from.split("@")[0],message.body);
             });
-            this.client.initialize()
+            await this.client.initialize()
         });
     }
 
