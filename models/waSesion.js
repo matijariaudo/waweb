@@ -18,7 +18,7 @@ class Instances{
         phone=await Phone.findById(this.id)
         console.log("Starting: "+this.id)
         return new Promise(async(resolve, reject) => {
-            this.client = new Client({authStrategy: new LocalAuth({ clientId: this.id }), puppeteer: {headless: true,args: ['--no-sandbox', '--disable-setuid-sandbox']}});
+            this.client = new Client({authStrategy: new LocalAuth({ clientId: this.id }), puppeteer: {headless: true,args: ['--no-sandbox', '--disable-setuid-sandbox'],ignoreHTTPSErrors: true,defaultViewport: { width: 800, height: 600 }}});
             this.client.on('qr', async(qr) => {
                 this.qr=qr;
                 this.session="pending";
@@ -29,9 +29,13 @@ class Instances{
                     resolve(true);
                 }
             });
+            this.client.on('authenticated',()=>{
+                console.log("Auth: ",this.id)
+            })
             this.client.on('ready', async(aaa)=>{
                 //obtenerSocket.getInstance().io.emit('recibir',{nro:this.nro,connection:"online"})
-                this.session="connect";this.qr="";primera=false;console.log("Ready to use: "+this.id);
+                this.session="connect";this.qr="";primera=false;
+                console.log("Ready to use: "+this.id);
                 phone.session="connect";phone.save();
                 this.phone=await this.client.info.wid;
                 resolve(true);

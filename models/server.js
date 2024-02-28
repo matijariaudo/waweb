@@ -2,7 +2,7 @@ const express=require('express')
 const { dbConnection } = require('../database/DBconfig')
 require('dotenv').config()
 const path=require('path');
-const { socketController } = require('../controllers/socket');
+//const { socketController } = require('../controllers/socket');
 
 class server{
     constructor(){
@@ -11,10 +11,10 @@ class server{
         this.middlewares();
         
         this.server=require('http').createServer(this.app);
-        this.io = require('socket.io')(this.server);
+        //this.io = require('socket.io')(this.server);
         //Establezco la primer instancia
-        obtenerSocket.getInstance(this.io)
-        this.socket()
+        //obtenerSocket.getInstance(this.io)
+        //this.socket()
         this.path={
             base:'/api'
         }
@@ -30,13 +30,13 @@ class server{
     }
 
     socket(){
-        console.log("conectando socket")
-        this.io.on('connection',(socket)=>{socketController(socket,this.io);})
+        //console.log("conectando socket")
+        //this.io.on('connection',(socket)=>{socketController(socket,this.io);})
     }
 
     
     obtener_socket(){
-        return this.io
+        //return this.io
     }
 
     routes(){
