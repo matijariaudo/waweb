@@ -56,7 +56,8 @@ const phoneCreacion=async(req,res)=>{
 const AveriguarQr=async(req,res)=>{
     const {instanceId}=req.body;
     const phone=await Phone.findById(instanceId);
-    if(!phone){return res.status(200).json({status:"error",error:"Incorrect instanceID value."})}
+    console.log("Phone",phone)
+    if(!phone){return res.status(200).json({status:"error",error:"Incorrect instanceID value.",phone})}
     const wsp=new Wsp();
     let instance=await wsp.getInstance(instanceId);
     if(!instance){
