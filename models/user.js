@@ -26,6 +26,11 @@ const userSchema=Schema({
         require:true,
         emun:['USER_ROLE','SELLER_ROLE','ADMIN_ROLE']
     },
+    plan:{
+        type:Number,
+        default:0
+    }
+    ,
     google:{
         type:Boolean,
         default:false

@@ -9,7 +9,7 @@ const {
 } = require('../middleware/validaciones');
 const { loginJWT, ModificarUsuario, loginCorreo, CrearUsuario } = require('../controllers/postUsuarios');
 const { EnviarMensaje,  getChats, getChat, getMessages, getConctacts } = require('../controllers/postCampains');
-const { phoneCreacion , AveriguarQr, phoneShow, removePhone} = require('../controllers/postPhones');
+const { phoneCreacion , AveriguarQr, phoneShow, removePhone, checkStatuClass, phoneChange} = require('../controllers/postPhones');
 
 const router=Router()
 
@@ -23,7 +23,9 @@ router.post('/usuarios/:id/validar',validarUsuarioJwt,loginJWT);
 
 //Phones administration
 router.post('/instance/get',validarUsuarioJwt,phoneShow);
+router.post('/instance/gral',validarUsuarioJwt,checkStatuClass);
 router.post('/instance/create',validarUsuarioJwt,phoneCreacion);
+router.post('/instance/edit',validarUsuarioJwt,phoneChange);
 router.post('/instance/qr',validarUsuarioJwt,AveriguarQr)
 router.post('/instance/delete',validarUsuarioJwt,removePhone)
 router.post('/instance/send',validarUsuarioJwt,EnviarMensaje) 

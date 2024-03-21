@@ -2,11 +2,13 @@ const { Wsp, Phone } = require(".././models");
 
 
 const initWA=async()=>{
-    const telefonos=(await Phone.find({status:"active"})).map(e=>e.id);
+    const telefonos=(await Phone.find({status:"active"}));
     const wsp=new Wsp();
-    //await Promise.all(telefonos.filter(a=>a=='65c0ca508d18bcd5962fa3bb').map(async(id)=>{
-    await Promise.all(telefonos.map(async(id)=>{
-            const inst=await wsp.Instance(id)
+    //console.log(telefonos)
+    //console.log(telefonos.filter(a=>a.session==='connect' || a.session==='initializing'))
+    //await Promise.all(telefonos.map(async(b)=>{
+    await Promise.all(telefonos.filter(a=>a.session==='connect' || a.session==='initializing').map(async(b)=>{
+            const inst=await wsp.Instance(b.id)
     }));
 }    
 

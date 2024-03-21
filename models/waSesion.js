@@ -4,21 +4,24 @@ const { cola, ColaMsg, genAleatorio } = require('../controllers/cronSend');
 const Mensage=require('./mensage')
 const Phone=require('./phone');
 const { obtenerSocket } = require('./server');
+const fsExtra = require('fs-extra');
 
 class Instances{
-    constructor(id){
+    constructor(id,{session}={session:"initializing"}){
         this.id=id;
         this.qr="";
         this.phone={}
-        this.session="initializing";
+        this.session=session?"initializing":"starting";
+        
     }
     async init(){
-        let primera=true;
         let phone;
         phone=await Phone.findById(this.id)
+        phone.session=this.session;phone.save();
+        let primera=true;
         console.log("Starting: "+this.id)
         return new Promise(async(resolve, reject) => {
-            this.client = new Client({authStrategy: new LocalAuth({ clientId: this.id }), puppeteer: {headless: true,args: ['--no-sandbox', '--disable-setuid-sandbox'],ignoreHTTPSErrors: true,defaultViewport: { width: 800, height: 600 }}});
+            this.client = new Client({authStrategy: new LocalAuth({ clientId: this.id }),qrMaxRetries:1, puppeteer: {headless: true,args: ['--no-sandbox', '--disable-setuid-sandbox'],ignoreHTTPSErrors: true,defaultViewport: { width: 800, height: 600 }}});
             this.client.on('qr', async(qr) => {
                 this.qr=qr;
                 this.session="pending";
@@ -29,27 +32,51 @@ class Instances{
                     resolve(true);
                 }
             });
-            this.client.on('authenticated',()=>{
+            this.client.on('authenticated',async()=>{
+                phone=await Phone.findById(this.id)
+                phone.session="connect";
+                phone.save();
                 console.log("Auth: ",this.id)
             })
             this.client.on('ready', async(aaa)=>{
                 //obtenerSocket.getInstance().io.emit('recibir',{nro:this.nro,connection:"online"})
                 this.session="connect";this.qr="";primera=false;
                 console.log("Ready to use: "+this.id);
-                phone.session="connect";phone.save();
                 this.phone=await this.client.info.wid;
+                phone=await Phone.findById(this.id)
+                console.log(await this.client.info.wid)
+                phone.number=await this.client.info.wid.user;
+                phone.save()
                 resolve(true);
             });
             this.client.on('disconnected', async(r) => {
-                this.session="disconnect";this.qr="";primera=false;console.log("Issue: "+this.nro);
-                phone.session="disconnect";phone.save();
-                this.init();
+                primera=false;console.log("Issue: "+this.id);
+                try {
+                    this.destroyInstance();                
+                } catch (error) {
+                    console.error("Error al ejecutar destroyInstance():", error);
+                    // Puedes agregar cualquier manejo adicional de errores aquí
+                }
             });
             this.client.on('message', message => {
                 //console.log("+"+message.from.split("@")[0],message.body);
             });
             await this.client.initialize()
         });
+    }
+
+    async destroyInstance(){
+        this.session="disconnect";
+        this.qr="";
+        const phone=await Phone.findById(this.id)
+        phone.session="disconnect";phone.save();
+        if(this.session=='connect'){
+            await this.client.logout();
+        }
+        await this.client.destroy();
+        console.log("eliminar instancia")
+        const wsp=new Wsp();
+        await wsp.deleteIntance(this.id);
     }
 
     async getProp(){
@@ -130,6 +157,20 @@ class Wsp {
             return false;
         }
         return this.instancias[id];
+    }
+
+    async deleteIntance(id){
+        delete this.instancias[id]
+        fsExtra.remove('./.wwebjs_auth/session-'+id);
+    }
+
+    async getInfo(){
+        const key=Object.keys(this.instancias)
+        const rta=[]
+        key.forEach(e => {
+          rta.push(this.instancias[e])  
+        });
+        return rta.map(a=>{return {id:a.id,session:a.session}});
     }
 }
 

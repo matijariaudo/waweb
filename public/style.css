@@ -1,7 +1,4 @@
 
-body{
-    background: rgb(255, 255, 255);
-}
 
 h3{
   font-weight: 100;
@@ -11,18 +8,25 @@ input,textarea{
   margin:0px 0px 10px 0px;
   width: 100%;
   padding:5px 20px;
-  border:1px solid rgb(248, 248, 248);
-  background-color: rgba(0,0,0, 0.015);
+  border:1px solid rgba(181, 145, 145, 0);
+  background-color: rgba(255, 255, 255, 0.32);
   border-radius:5px
 }
-input::placeholder{
-  color:rgb(139, 139, 139)
+input::placeholder,textarea::placeholder{
+  color:rgb(179, 177, 177);
+  font-style: oblique;
 }
 
 .sombra{
-    box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.05);
--webkit-box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.05);
--moz-box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.05);
+    box-shadow: -1px 1px 25px -6px #25D3666f;
+-webkit-box-shadow: -1px 1px 25px -6px #25D3666f;
+-moz-box-shadow: -1px 1px 25px -6px #25d3656f;
+}
+
+.sombra_nav{
+  box-shadow: -1px 1px 25px -6px #83ffb1;
+-webkit-box-shadow: -1px 1px 25px -6px #25d365;
+-moz-box-shadow: -1px 1px 25px -6px #25d365;
 }
 
 .placa{
@@ -33,6 +37,8 @@ input::placeholder{
   box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.05);
   -webkit-box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.05);
   -moz-box-shadow: -1px 1px 25px -6px rgba(0,0,0,0.05);
+  background-color: #25d36517;
+  border: 1px solid #25d365;
   
 }
 
@@ -41,37 +47,36 @@ input::placeholder{
     overflow-y: auto;
     padding: 0px;
     padding-top: 0px;
-    background-color:#FFF;
+    background:linear-gradient(180deg,rgba(255,255,255,1) 0%, rgb(219, 253, 231,.5) 100%);
 }
 
 .capaBase{
     margin:0px;
     padding:0px;
-    padding-top:70px;
+    padding-top:100px;
     margin-top: 0px;
 }
 .btn{
-  background:rgba(155,255,229);
-  color:#000;
-  border:1px solid rgb(84, 194, 164);
+  background:#25D366;
+  color:#ffffff;
+  border:0px solid rgb(84, 194, 164);
+}
+.btn:hover{
+  background:#25D366;
+  color:#0b0b0b;
 }
 .btn2{
   color:#FFF;background:rgb(191, 219, 243)
 }
 .btn3{
-  color:rgba(155,255,229);
-}
-.btn:hover{
-  background: rgb(84, 194, 164);
-  border:1px solid rgb(84, 194, 164);
-  color:rgb(84, 194, 164);
+  color:#25D366;
 }
 
 table{
     width:100%
 }
 thead{
-    background:rgba(155,255,229);
+    background:#25D366;
     color:#000
 }
 td,th{
@@ -141,3 +146,153 @@ tbody tr:nth-child(even){
       font-size:24px;
     }
   }
+
+  .modal-content{
+    color:#FFF;
+    background: linear-gradient(180deg,#5b5b5b 0%, #282828 100%);
+    border: 0px;
+  }
+  .modal-content input{
+    color:#FFF
+  }
+
+  .modal-footer{
+    border: 0px;
+  }
+
+
+  .lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 176px;
+    height: 176px;
+  }
+  .lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    margin: 18px;
+    border: 18px solid #25D366;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #25D366 transparent transparent transparent;
+  }
+  .lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+  }
+  .lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+  .lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+  }
+  @keyframes lds-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+
+  .menu{
+    text-decoration: none;
+    color:rgb(255, 255, 255);
+    cursor: pointer;
+    height: 100%;
+    border: 4px solid #25D366;
+  }
+  .menu:hover{
+    color:#
+  }
+
+  .login {
+    background: linear-gradient(-45deg, #25D366, #75ffa7, #51d581, #6bbeb0);
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+    height: 100vh;
+  }
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .capaBase{
+    background: rgb(27, 27, 27);
+    height: 100vh;
+    color:#FFF;
+    overflow-y: auto;
+  }
+
+  .inputCapa{
+    background-color: #00000024;
+    color: #FFF;
+  }
+
+
+  .lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+  }
+  .lds-ellipsis div {
+    position: absolute;
+    top: 12px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #25d365;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  .lds-ellipsis div:nth-child(1) {
+    left: 0px;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(2) {
+    left: 0px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(3) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(4) {
+    left: 12px;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(12px, 0);
+    }
+  }
+  
